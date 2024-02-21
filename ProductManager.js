@@ -22,21 +22,22 @@ class ProductManager {
 
     inicialize = async () => {
         this.#products = await this.getProducts()
-        ProductManager.#ultimoIdProducto = this.#getNuevoIdInicio()
+        ProductManager.#ultimoIdProducto = this.#getNuevoIdInicio()        
     }
 
     #getNuevoIdInicio = () => {
-        let mayorID = 1
+        let mayorID = 0
         this.#products.forEach(item => {
-            if (mayorID <= item.id)
+            if (mayorID < item.id)
                 mayorID = item.id
-        });
+        });     
+        mayorID = mayorID + 1   
         return mayorID
     }
 
     getProducts = async () => {
         try {
-            this.#readProducts()
+            await this.#readProducts()
             return this.#products
         }
         catch (err) {
@@ -199,11 +200,10 @@ main = async () => {
         await manejadorDeProductos.updateProduct({ ...product1, stock: 40, price: 500 })
         console.log(await manejadorDeProductos.getProducts())
     }
-    let product2 = await manejadorDeProductos.getProductById(3)  // error porque no encuentra el producto
-    if (product2) console.log(product2)  
-    await manejadorDeProductos.deleteProduct(1)
+    console.log(await manejadorDeProductos.getProductById(9))  // error porque no encuentra el producto
+    await manejadorDeProductos.deleteProduct(2)
     console.log(await manejadorDeProductos.getProducts())
-    await manejadorDeProductos.deleteProduct(3)
+    await manejadorDeProductos.deleteProduct(5)  // error porque no encuentra el producto
     console.log(await manejadorDeProductos.getProducts())
 }
 
